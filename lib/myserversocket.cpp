@@ -69,3 +69,10 @@ void MyServerSocket::SetPort(int port){
 	m_port = port;
 }
 
+int MyServerSocket::Accept(){
+	struct sockaddr clientSocket;
+	socklen_t socklen;
+	int fd = accept(m_fd, &clientSocket, &socklen);
+	return fd;
+}
+

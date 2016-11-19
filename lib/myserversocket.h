@@ -23,6 +23,7 @@ public:
 	int Init();
 	int Bind();
 	int Listen();
+	int Accept();
 	
 	int GetPort();
 	void SetPort(int port);
