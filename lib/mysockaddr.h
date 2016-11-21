@@ -2,16 +2,24 @@
 #define _MY_SOCKADDR_
 
 #define MySockAddr_IPv4 AF_INET
-#define MYSOckAddr_IPv6 AF_INET6
+#define MySockAddr_IPv6 AF_INET6
 #include <string.h>
+#include <netinet/in.h>
+#include <stdio.h>
+#include <arpa/inet.h>
 
 class MySockAddr{
 private:
-	struct sockaddr_in m_sockaddr;
-	int m_address;
-	int m_family;
+	struct sockaddr_in m_sa;
 public:
 	MySockAddr();
+	MySockAddr(const char* host, int port);
 	struct sockaddr* GetPtSockAddr();
-}
+	int GetFamily();
+	void SetFamily(int _family);
+	int GetPort();
+	void SetPort(int _port);
+	int SetAddr(char* host);
+	void Output();
+};
 #endif

@@ -3,6 +3,7 @@
 #include <netinet/in.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 int Socket(int domain, int type, int protocol){
 	int fd = 0;
@@ -36,6 +37,28 @@ int Accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen){
 	return confd;
 }
 
+int DoEcho(int sockfd){
+	ssize_t n;
+	char buff[1024];
+	memset(buff, 0, sizeof(buff));
+	while ((n = read(sockfd, buff, 1024)) > 0){
+		printf("recieve from client,data[%s]\n",buff);
+		write(sockfd, buff, n);
+	}
+}
+
+int DoEcho2(int pid, int sockfd){
+	ssize_t n;
+	char buff[1024];
+	memset(buff, 0, sizeof(buff));
+	while ((n = read(sockfd, buff, 1024)) > 0){
+		printf("recieve from client, pid is [%d], data[%s]\n", pid, buff);
+		write(sockfd, buff, n);
+		close(sockfd);
+		break;
+	}
+}
+
 int main(){
 	int listenfd, connfd;
 	pid_t childpid;
@@ -54,7 +77,16 @@ int main(){
 	for (;;){
 		clilen = sizeof(cliaddr);
 		connfd = Accept(listenfd, (struct sockaddr*) &cliaddr, &clilen);
-		printf("accept OK\n");
+		printf("A new client connect, client fd is %d\n", connfd);
+		int pid;
+		if ((pid = fork()) < 0){
+			printf("fork error\n");
+		}else if (pid == 0){
+			close(connfd);
+		}else{
+			close(listenfd);
+			DoEcho(connfd);
+		}
 	}
 	return 0;
 }

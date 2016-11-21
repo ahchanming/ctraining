@@ -39,6 +39,11 @@ int Recv(int fd, void* holder, size_t size){
 
 
 int main(int argc, char **argv){
+	if (argc < 2){
+		puts("please run client $host");
+		exit(0);
+	}
+
 	int serverFd = Socket(AF_INET, SOCK_STREAM, 0);
 	struct sockaddr_in seraddr;
 	char buff[4096], message[4096];
@@ -46,7 +51,7 @@ int main(int argc, char **argv){
 	bzero(&seraddr, sizeof(seraddr));
 	seraddr.sin_family = AF_INET;
 	seraddr.sin_port = htons(8098);
-	if (inet_pton(AF_INET, "127.0.0.1", &seraddr.sin_addr) < 0){
+	if (inet_pton(AF_INET, argv[1], &seraddr.sin_addr) < 0){
 		printf("inet_pton error\n");
 		exit(0);
 	}
