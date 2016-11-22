@@ -1,4 +1,5 @@
 #include "myserversocket.h"
+#include "mysocket.h"
 
 MyServerSocket::MyServerSocket(){
 	m_port = 8096;
@@ -33,14 +34,6 @@ int MyServerSocket::Listen(){
 	return 0;
 }
 
-int MyServerSocket::Socket(int domain, int type, int procotol){
-	int ret;
-	if ((ret = socket(domain,type, procotol)) < 0){
-		return -1;
-	}
-	return ret;
-}
-
 int MyServerSocket::Init(){
 	if ((m_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0){
 		puts("socket init error");
@@ -69,10 +62,23 @@ void MyServerSocket::SetPort(int port){
 	m_port = port;
 }
 
-int MyServerSocket::Accept(){
+
+MySocket* MyServerSocket::Accept(){
 	struct sockaddr clientSocket;
 	socklen_t socklen;
-	int fd = accept(m_fd, &clientSocket, &socklen);
-	return fd;
+	int fd;
+	puts("accept ready");
+	while (true){
+		socklen = sizeof(clientSocket);
+		fd = accept(m_fd, &clientSocket, &socklen);
+		printf("a new connect! fd is %d errno is %d\n", fd, (int)errno);
+		if (fd <= 0){
+			continue;
+		}
+		MySockAddr *ptAddr = new MySockAddr(clientSocket, socklen);
+		MySocket* mySocket = new MySocket(fd, ptAddr);
+		return mySocket;
+	}
+	return NULL;
 }
 

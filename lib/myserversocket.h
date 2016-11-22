@@ -6,7 +6,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-
+#include "mysocket.h"
+#include "mysockaddr.h"
+#include "errno.h"
 class MyServerSocket{
 private:
 	int m_port;
@@ -14,17 +16,15 @@ private:
 	bool hasInit;
 	sockaddr_in m_sockaddr;
 	int m_fd;
-	int Socket(int domain, int type, int protocol);
 
 public:
 	MyServerSocket();
 	MyServerSocket(int port);
 	MyServerSocket(int port, int backlog);
+	MySocket* Accept();
 	int Init();
 	int Bind();
 	int Listen();
-	int Accept();
-	
 	int GetPort();
 	void SetPort(int port);
 };

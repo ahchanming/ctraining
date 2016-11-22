@@ -16,6 +16,11 @@ MySockAddr::MySockAddr(const char* host, int port){
 	}
 }
 
+MySockAddr::MySockAddr(struct sockaddr addr, socklen_t len){
+	memcpy(&m_sa, &addr, sizeof(addr));
+	m_socklen = len;
+}
+
 struct sockaddr* MySockAddr::GetPtSockAddr(){
 	return (struct sockaddr*)&m_sa;
 }

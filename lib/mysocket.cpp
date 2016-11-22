@@ -12,6 +12,11 @@ MySocket::MySocket(const char* host, int port){
 	m_addr = new MySockAddr(host, port);
 }
 
+MySocket::MySocket(int fd, MySockAddr* addr){
+	m_addr = addr;
+	m_fd = fd;
+}
+
 int MySocket::Init(){
 	if ((m_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0){
 		printf("socket init error\n");
@@ -32,9 +37,6 @@ int MySocket::Connect(){
 		printf("Error, m_addr is null");
 	}
 	int conRet;
-	printf("Size A is %d\n", (int)sizeof(m_addr->GetPtSockAddr()));
-	printf("Size B is %d\n", (int)sizeof(*(m_addr->GetPtSockAddr())));
-
 	if ((conRet = connect(m_fd, m_addr->GetPtSockAddr(), sizeof(*(m_addr->GetPtSockAddr())))) < 0){
 		printf("Connect Error\n");
 		return -1;
@@ -58,4 +60,9 @@ int MySocket::Recv(void* buff, int length){
 		return -1;
 	}
 	return ret;
+}
+
+
+struct sockaddr* MySocket::GetScokAddr(){
+	return m_addr->GetPtSockAddr();
 }

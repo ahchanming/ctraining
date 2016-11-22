@@ -16,10 +16,12 @@ private:
 public:
 	MySocket();
 	MySocket(const char *host, int port);
+	MySocket(int fd, MySockAddr *ptAddr);
 	MySocket(MySockAddr* ptAddr);
 	int Init();
 	int Connect();
 	int Send(const void* buff, int length);
 	int Recv(void* buff, int length);
+	struct sockaddr* GetScokAddr();
 };
 #endif

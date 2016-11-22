@@ -11,9 +11,11 @@
 class MySockAddr{
 private:
 	struct sockaddr_in m_sa;
+	socklen_t m_socklen;
 public:
 	MySockAddr();
 	MySockAddr(const char* host, int port);
+	MySockAddr(struct sockaddr addr, socklen_t socklen);
 	struct sockaddr* GetPtSockAddr();
 	int GetFamily();
 	void SetFamily(int _family);
